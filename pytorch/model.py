@@ -3,7 +3,7 @@ from torch import nn
 
 class NeRF(nn.Module):
 
-    def __init__(self, device, min_bounds, max_bounds, num_enc_p=10, num_enc_d=4, num_ch_p=384, num_ch_d=128, num_factors=8):
+    def __init__(self, device, min_bounds, max_bounds, num_enc_p=10, num_enc_d=4, num_ch_p=384, num_ch_d=128, num_factors=6):
         super(NeRF, self).__init__()
         self.device = device
         self.num_enc_p = num_enc_p
@@ -105,11 +105,12 @@ class NeRF(nn.Module):
         density = F.relu(p_res9[:,0])
         res10 = self.layers_p[9](p_res9[:,1:])
         p_factors = self.layers_p[10](p_res10)
-        p_factors = torch.reshape(p_factors, [p.shape[0], ])
+        p_factors = p_factors.reshape([p.shape[0], 3, num_factors])
         d_res1 = self.layers_d[0](d_enc)
         d_res2 = self.layers_d[1](d_res1)
         d_res3 = self.layers_d[2](d_res2)
         d_res4 = self.layers_d[3](d_res3)
         d_factors = self.layers_d[4](d_res4)
-        
+        d_factors = d_factors.reshape([d.shape[0], num_factors, 1])
+        color = torch.squeeze(torch.bmm(d_factors, p_factors))
         return [color, density]
