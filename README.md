@@ -1,4 +1,4 @@
-# msc-project
+# msc-thesis-project
 
 Vuorio  V.  (2021)  Evaluation  of  Learning-Based  Techniques  in  Novel  View Synthesis.
 University  of  Oulu, Degree Programme in Computer Science and Engineering, 62 p.
